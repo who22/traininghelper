@@ -3,7 +3,8 @@ script_author('Gerald.myr')
 
 require 'lib.moonloader'
 
-local scriptVersion = 2
+local scriptVersion = 1
+local updState = false
 
 local scriptPath = thisScript().path
 local scriptUrl = 'https://raw.githubusercontent.com/who22/traininghelper/main/traininghelper.lua'
@@ -21,7 +22,7 @@ encoding.default = 'CP1251'
 u8 = encoding.UTF8
 
 local russian_characters = {
-    [168] = '¨', [184] = '¸', [192] = 'À', [193] = 'Á', [194] = 'Â', [195] = 'Ã', [196] = 'Ä', [197] = 'Å', [198] = 'Æ', [199] = 'Ç', [200] = 'È', [201] = 'É', [202] = 'Ê', [203] = 'Ë', [204] = 'Ì', [205] = 'Í', [206] = 'Î', [207] = 'Ï', [208] = 'Ğ', [209] = 'Ñ', [210] = 'Ò', [211] = 'Ó', [212] = 'Ô', [213] = 'Õ', [214] = 'Ö', [215] = '×', [216] = 'Ø', [217] = 'Ù', [218] = 'Ú', [219] = 'Û', [220] = 'Ü', [221] = 'İ', [222] = 'Ş', [223] = 'ß', [224] = 'à', [225] = 'á', [226] = 'â', [227] = 'ã', [228] = 'ä', [229] = 'å', [230] = 'æ', [231] = 'ç', [232] = 'è', [233] = 'é', [234] = 'ê', [235] = 'ë', [236] = 'ì', [237] = 'í', [238] = 'î', [239] = 'ï', [240] = 'ğ', [241] = 'ñ', [242] = 'ò', [243] = 'ó', [244] = 'ô', [245] = 'õ', [246] = 'ö', [247] = '÷', [248] = 'ø', [249] = 'ù', [250] = 'ú', [251] = 'û', [252] = 'ü', [253] = 'ı', [254] = 'ş', [255] = 'ÿ',
+    [168] = 'Ğ', [184] = 'Ñ‘', [192] = 'Ğ', [193] = 'Ğ‘', [194] = 'Ğ’', [195] = 'Ğ“', [196] = 'Ğ”', [197] = 'Ğ•', [198] = 'Ğ–', [199] = 'Ğ—', [200] = 'Ğ˜', [201] = 'Ğ™', [202] = 'Ğš', [203] = 'Ğ›', [204] = 'Ğœ', [205] = 'Ğ', [206] = 'Ğ', [207] = 'ĞŸ', [208] = 'Ğ ', [209] = 'Ğ¡', [210] = 'Ğ¢', [211] = 'Ğ£', [212] = 'Ğ¤', [213] = 'Ğ¥', [214] = 'Ğ¦', [215] = 'Ğ§', [216] = 'Ğ¨', [217] = 'Ğ©', [218] = 'Ğª', [219] = 'Ğ«', [220] = 'Ğ¬', [221] = 'Ğ­', [222] = 'Ğ®', [223] = 'Ğ¯', [224] = 'Ğ°', [225] = 'Ğ±', [226] = 'Ğ²', [227] = 'Ğ³', [228] = 'Ğ´', [229] = 'Ğµ', [230] = 'Ğ¶', [231] = 'Ğ·', [232] = 'Ğ¸', [233] = 'Ğ¹', [234] = 'Ğº', [235] = 'Ğ»', [236] = 'Ğ¼', [237] = 'Ğ½', [238] = 'Ğ¾', [239] = 'Ğ¿', [240] = 'Ñ€', [241] = 'Ñ', [242] = 'Ñ‚', [243] = 'Ñƒ', [244] = 'Ñ„', [245] = 'Ñ…', [246] = 'Ñ†', [247] = 'Ñ‡', [248] = 'Ñˆ', [249] = 'Ñ‰', [250] = 'ÑŠ', [251] = 'Ñ‹', [252] = 'ÑŒ', [253] = 'Ñ', [254] = 'Ñ', [255] = 'Ñ',
 }
 
 local updateIni = inicfg.load(nil, updatePath)
@@ -42,7 +43,7 @@ local menuWindow = new.bool(false)
 
 local color = new.float[3](1.0, 1.0, 1.0)
 local notepad = new.char[65535]('')
-local autoPMitems = {u8'Âûêëş÷åí', u8'Âêëş÷åí', u8'Òîëüêî äğóçüÿ'}
+local autoPMitems = {u8'Ğ’Ñ‹ĞºĞ»ÑÑ‡ĞµĞ½', u8'Ğ’ĞºĞ»ÑÑ‡ĞµĞ½', u8'Ğ¢Ğ¾Ğ»ÑŒĞºĞ¾ Ğ´Ñ€ÑƒĞ·ÑŒÑ'}
 local autoPM = new.int(tonumber(config.settings.autoPM))
 local autoPMTable = new['const char*'][#autoPMitems](autoPMitems)
 
@@ -59,23 +60,23 @@ function main()
 	
 	
 	if sampGetCurrentServerAddress() ~= '37.230.162.117' then 
-		msgChat('Áğàò òû íå íà {90ce5a}TRAINING SERVER{FFFFFF}.... ÿ îòêëş÷àşñü âåäü ìíå òóò íå ìåñòî :(');
+		msgChat('Ğ‘Ñ€Ğ°Ñ‚ Ñ‚Ñ‹ Ğ½Ğµ Ğ½Ğ° {90ce5a}TRAINING SERVER{FFFFFF}.... Ñ Ğ¾Ñ‚ĞºĞ»ÑÑ‡Ğ°ÑÑÑŒ Ğ²ĞµĞ´ÑŒ Ğ¼Ğ½Ğµ Ñ‚ÑƒÑ‚ Ğ½Ğµ Ğ¼ĞµÑÑ‚Ğ¾ :(');
 		script:unload()
 	else
 
 
-		msgChat('TrainingHelper çàïóùåí | /binds - áèíäû | /cmds - êîìàíäû')
+		msgChat('TrainingHelper Ğ·Ğ°Ğ¿ÑƒÑ‰ĞµĞ½ | /binds - Ğ±Ğ¸Ğ½Ğ´Ñ‹ | /cmds - ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹')
 
 
 		sampRegisterChatCommand('binds', function(id)
-			msgChat('Z - ğåàëüíîå âğåìÿ | ÏÊÌ + X - fast /pm | I - friend list')
+			msgChat('Z - Ñ€ĞµĞ°Ğ»ÑŒĞ½Ğ¾Ğµ Ğ²Ñ€ĞµĞ¼Ñ | ĞŸĞšĞœ + X - fast /pm | I - friend list')
 		end)
 
 
 		sampRegisterChatCommand('cmds', function(id)
-			msgChat('/faddname - äîáàâèòü äğóãà ïî íèêó | /faddid - äîáàâèòü äğóãà ïî ID')
-			msgChat('/menu - ìåíş ñ ğàçíûìè ôóíêöèÿìè ñêğèïòà | /isafk ID - ÷åê íà AFK | /cc - î÷èñòèòü ÷àò')
-			msgChat('/friendlist - ñïèñîê âñåõ äğóçåé | /notepad - áëîêíîò äëÿ çàìåòîê | /delf - óäàëèòü äğóãà')
+			msgChat('/faddname - Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ñ‚ÑŒ Ğ´Ñ€ÑƒĞ³Ğ° Ğ¿Ğ¾ Ğ½Ğ¸ĞºÑƒ | /faddid - Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ñ‚ÑŒ Ğ´Ñ€ÑƒĞ³Ğ° Ğ¿Ğ¾ ID')
+			msgChat('/menu - Ğ¼ĞµĞ½Ñ Ñ Ñ€Ğ°Ğ·Ğ½Ñ‹Ğ¼Ğ¸ Ñ„ÑƒĞ½ĞºÑ†Ğ¸ÑĞ¼Ğ¸ ÑĞºÑ€Ğ¸Ğ¿Ñ‚Ğ° | /isafk ID - Ñ‡ĞµĞº Ğ½Ğ° AFK | /cc - Ğ¾Ñ‡Ğ¸ÑÑ‚Ğ¸Ñ‚ÑŒ Ñ‡Ğ°Ñ‚')
+			msgChat('/friendlist - ÑĞ¿Ğ¸ÑĞ¾Ğº Ğ²ÑĞµÑ… Ğ´Ñ€ÑƒĞ·ĞµĞ¹ | /notepad - Ğ±Ğ»Ğ¾ĞºĞ½Ğ¾Ñ‚ Ğ´Ğ»Ñ Ğ·Ğ°Ğ¼ĞµÑ‚Ğ¾Ğº | /delf - ÑƒĞ´Ğ°Ğ»Ğ¸Ñ‚ÑŒ Ğ´Ñ€ÑƒĞ³Ğ°')
 		end)
 
 
@@ -98,14 +99,14 @@ function main()
 
 		sampRegisterChatCommand('faddid', function(id)
 			if tonumber(id) == nil then
-				return msgChat('Ââåäè àéäè, à íå ıòî {5A90CE}' .. id .. '{FFFFFF}, ñïàñèáî')
+				return msgChat('Ğ’Ğ²ĞµĞ´Ğ¸ Ğ°Ğ¹Ğ´Ğ¸, Ğ° Ğ½Ğµ ÑÑ‚Ğ¾ {5A90CE}' .. id .. '{FFFFFF}, ÑĞ¿Ğ°ÑĞ¸Ğ±Ğ¾')
 			else
 				if sampIsPlayerConnected(id) then
 					local name = sampGetPlayerNickname(tonumber(id))
 					local friendList = config.friends
 					config.friends[#friendList + 1] = name
 					inicfg.save(config, directIni)
-					msgChat('Ó òåáÿ íîâûé äğóã, à ìîæåò è ïîäğóæêà... {5A90CE}'..name..'{FFFFFF} óğà!!!')
+					msgChat('Ğ£ Ñ‚ĞµĞ±Ñ Ğ½Ğ¾Ğ²Ñ‹Ğ¹ Ğ´Ñ€ÑƒĞ³, Ğ° Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ¸ Ğ¿Ğ¾Ğ´Ñ€ÑƒĞ¶ĞºĞ°... {5A90CE}'..name..'{FFFFFF} ÑƒÑ€Ğ°!!!')
 				end
 			end
 		end)
@@ -116,7 +117,7 @@ function main()
 			config.friends[#friendList + 1] = name
 
 			inicfg.save(config, directIni)
-			msgChat('Ó òåáÿ íîâûé äğóã, à ìîæåò è ïîäğóæêà... {5A90CE}'..name..'{FFFFFF} óğà!!!')
+			msgChat('Ğ£ Ñ‚ĞµĞ±Ñ Ğ½Ğ¾Ğ²Ñ‹Ğ¹ Ğ´Ñ€ÑƒĞ³, Ğ° Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ¸ Ğ¿Ğ¾Ğ´Ñ€ÑƒĞ¶ĞºĞ°... {5A90CE}'..name..'{FFFFFF} ÑƒÑ€Ğ°!!!')
 		end)
 
 
@@ -131,7 +132,7 @@ function main()
 					config.friends[#friendList] = nil
 
 					inicfg.save(config, directIni)
-					msgChat('Âû ïîòåğÿëè õîğîøåãî äğóãà, à ìîæåò è ïîäğóæêó... {5A90CE}'..name..'{FFFFFF}, ïğîùàé :(')
+					msgChat('Ğ’Ñ‹ Ğ¿Ğ¾Ñ‚ĞµÑ€ÑĞ»Ğ¸ Ñ…Ğ¾Ñ€Ğ¾ÑˆĞµĞ³Ğ¾ Ğ´Ñ€ÑƒĞ³Ğ°, Ğ° Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ¸ Ğ¿Ğ¾Ğ´Ñ€ÑƒĞ¶ĞºÑƒ... {5A90CE}'..name..'{FFFFFF}, Ğ¿Ñ€Ğ¾Ñ‰Ğ°Ğ¹ :(')
 				end
 			end
 		end)
@@ -150,7 +151,7 @@ function main()
 
 		sampRegisterChatCommand('spam', function(arg)
 			if arg == nil then
-				msgChat('À ãäå ïàğàìåòğû?')
+				msgChat('Ğ Ğ³Ğ´Ğµ Ğ¿Ğ°Ñ€Ğ°Ğ¼ĞµÑ‚Ñ€Ñ‹?')
 			else
 				lua_thread.create(function()
 					local arg1, arg2 = string.match(arg, '(.+),(.+)')
@@ -171,7 +172,7 @@ function main()
 		sampRegisterChatCommand('friendlist', function ()
 			local friendList = config.friends
 
-			msgChat('Ñïèñîê âñåõ äğóçåé:')
+			msgChat('Ğ¡Ğ¿Ğ¸ÑĞ¾Ğº Ğ²ÑĞµÑ… Ğ´Ñ€ÑƒĞ·ĞµĞ¹:')
 			for pos = 1, #friendList do
 				friend = friendList[pos]
 				sampAddChatMessage(friend, 0x0FFFFFF)
@@ -182,8 +183,8 @@ function main()
 		downloadUrlToFile(updateUrl, updatePath, function(id, status)
 			if status == dlstatus.STATUS_ENDDOWNLOADDATA then
 				if tonumber(updateIni.info.version) > scriptVersion then
-					msgChat('Îáíàğóæåíà íîâàÿ âåğñèÿ ñêğèïòà!')
-					updateScript()
+					msgChat('ĞĞ±Ğ½Ğ°Ñ€ÑƒĞ¶ĞµĞ½Ğ° Ğ½Ğ¾Ğ²Ğ°Ñ Ğ²ĞµÑ€ÑĞ¸Ñ ÑĞºÑ€Ğ¸Ğ¿Ñ‚Ğ°!')
+					updState = true
 				end
 				os.remove(updatePath)
 			end
@@ -194,12 +195,23 @@ function main()
 			if not sampIsChatInputActive() and not sampIsDialogActive() then
 
 
+				if updState then
+					downloadUrlToFile(scriptPath, scriptUrl, function(id, status)
+						if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+							msgChat('Ğ¡ĞºÑ€Ğ¸Ğ¿Ñ‚ Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»Ñ‘Ğ½!')
+							thisScript():reload()
+						end
+					end)
+					break
+				end
+
+
 				if isKeyJustPressed(VK_I) then
 					local friendList = config.friends
 					local friend = nil
 					local res = ''
 
-					msgChat('{5A90CE}Ñïèñîê äğóçåé îíëàéí:')
+					msgChat('{5A90CE}Ğ¡Ğ¿Ğ¸ÑĞ¾Ğº Ğ´Ñ€ÑƒĞ·ĞµĞ¹ Ğ¾Ğ½Ğ»Ğ°Ğ¹Ğ½:')
 
 					for id = 0, 500 do
 						if sampIsPlayerConnected(id) then
@@ -221,17 +233,17 @@ function main()
 					local hour = tonumber(os.date('%H'))
 
 					if hour > 20 then
-						msgChat('{DE3131}Âíèìàíèå! {FFFFFF}Ñğî÷íî ñïàòü, çàâòğà â øêîëó! Ìàìêà ïèçäû äàñò!')
+						msgChat('{DE3131}Ğ’Ğ½Ğ¸Ğ¼Ğ°Ğ½Ğ¸Ğµ! {FFFFFF}Ğ¡Ñ€Ğ¾Ñ‡Ğ½Ğ¾ ÑĞ¿Ğ°Ñ‚ÑŒ, Ğ·Ğ°Ğ²Ñ‚Ñ€Ğ° Ğ² ÑˆĞºĞ¾Ğ»Ñƒ! ĞœĞ°Ğ¼ĞºĞ° Ğ¿Ğ¸Ğ·Ğ´Ñ‹ Ğ´Ğ°ÑÑ‚!')
 					end
 
 					_, playerID = sampGetPlayerIdByCharHandle(playerPed)
-					msgChat('ID:' .. ' {90ce5a}' .. playerID .. ' {FFFFFF}' .. 'Âğåìÿ:' .. ' {90ce5a}' .. os.date('%H:%M:%S').. ' {FFFFFF}' .. 'Èãğîâîå âğåìÿ:' .. ' {90ce5a}' .. getTimeOfDay() .. ':00')
+					msgChat('ID:' .. ' {90ce5a}' .. playerID .. ' {FFFFFF}' .. 'Ğ’Ñ€ĞµĞ¼Ñ:' .. ' {90ce5a}' .. os.date('%H:%M:%S').. ' {FFFFFF}' .. 'Ğ˜Ğ³Ñ€Ğ¾Ğ²Ğ¾Ğµ Ğ²Ñ€ĞµĞ¼Ñ:' .. ' {90ce5a}' .. getTimeOfDay() .. ':00')
 				end
 	
 				if isKeyJustPressed(VK_X) then
 					local result, target = getCharPlayerIsTargeting(playerHandle)
 					if not result then
-						msgChat('Çàæìè {90ce5a}ÏÊÌ{FFFFFF}, íàâåäè íà èãğîêà è óæå ïîòîì òûêíè {90ce5a}X{FFFFFF}.')
+						msgChat('Ğ—Ğ°Ğ¶Ğ¼Ğ¸ {90ce5a}ĞŸĞšĞœ{FFFFFF}, Ğ½Ğ°Ğ²ĞµĞ´Ğ¸ Ğ½Ğ° Ğ¸Ğ³Ñ€Ğ¾ĞºĞ° Ğ¸ ÑƒĞ¶Ğµ Ğ¿Ğ¾Ñ‚Ğ¾Ğ¼ Ñ‚Ñ‹ĞºĞ½Ğ¸ {90ce5a}X{FFFFFF}.')
 					else
 						_, pID  = sampGetPlayerIdByCharHandle(target)
 						sampSetChatInputEnabled(true)
@@ -253,7 +265,7 @@ local notepadFrame = imgui.OnFrame(
 		imgui.SetNextWindowPos(imgui.ImVec2(200, resY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
 		imgui.SetNextWindowSize(imgui.ImVec2(400, 400), imgui.Cond.FirstUseEver)
 
-		imgui.Begin(u8'Áëîêíîò', notepadWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
+		imgui.Begin(u8'Ğ‘Ğ»Ğ¾ĞºĞ½Ğ¾Ñ‚', notepadWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
 
 		imgui.InputTextMultiline('notepad', notepad, 65535, imgui.ImVec2(385, 362.5), imgui.Cond.FirstUseEver)
 
@@ -271,18 +283,18 @@ local menuFrame = imgui.OnFrame(
 		imgui.Begin(u8'trainingHelper', menuWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
 
 		imgui.PushItemWidth(145)
-		if imgui.Combo(u8'Àuto /pm', autoPM, autoPMTable, 3) then
+		if imgui.Combo(u8'Ğuto /pm', autoPM, autoPMTable, 3) then
 			if autoPM[0] == 0 then
 				config.settings.autoPM = 0
-				msgChat('AutoPM ôóíêöèÿ âûêëş÷åíà!')
+				msgChat('AutoPM Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ²Ñ‹ĞºĞ»ÑÑ‡ĞµĞ½Ğ°!')
 			end
 			if autoPM[0] == 1 then
 				config.settings.autoPM = 1
-				msgChat('AutoPM ôóíêöèÿ âêëş÷åíà!')
+				msgChat('AutoPM Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ°!')
 			end
 			if autoPM[0] == 2 then
 				config.settings.autoPM = 2
-				msgChat('AutoPM ôóíêöèÿ âêëş÷åíà òîëüêî äëÿ äğóçåé!')
+				msgChat('AutoPM Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ° Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ Ğ´Ğ»Ñ Ğ´Ñ€ÑƒĞ·ĞµĞ¹!')
 			end
 			inicfg.save(config, directIni)
 		end
@@ -296,7 +308,7 @@ local menuFrame = imgui.OnFrame(
 
 
 function sampev.onServerMessage(color, text)
-	if string.find(text, 'PM îò') and color == -65281 and tonumber(config.settings.autoPM) ~= 0 then
+	if string.find(text, 'PM Ğ¾Ñ‚') and color == -65281 and tonumber(config.settings.autoPM) ~= 0 then
 		if not sampIsChatInputActive() then
 
 			local modText = string.match(text, '(( .+ ))')
@@ -324,21 +336,21 @@ function sampev.onServerMessage(color, text)
 		end
 	end
 
-	if string.find(string.rlower(text), 'àóå') then
+	if string.find(string.rlower(text), 'Ğ°ÑƒĞµ') then
 		return false
 	end
 end
 
 
 function sampev.onSendChat(text)
-	if string.find(string.rlower(text), 'âîğîíà ïèäîğ') then
-		msgChat('Âû ïğèçíàëèñü â òîì, ÷òî ëşáèòå ñîñàòü ÷ëåíû')
-		return { '!ÿ ëşáëş ñîñàòü ÷ëåíû' }
+	if string.find(string.rlower(text), 'Ğ²Ğ¾Ñ€Ğ¾Ğ½Ğ° Ğ¿Ğ¸Ğ´Ğ¾Ñ€') then
+		msgChat('Ğ’Ñ‹ Ğ¿Ñ€Ğ¸Ğ·Ğ½Ğ°Ğ»Ğ¸ÑÑŒ Ğ² Ñ‚Ğ¾Ğ¼, Ñ‡Ñ‚Ğ¾ Ğ»ÑĞ±Ğ¸Ñ‚Ğµ ÑĞ¾ÑĞ°Ñ‚ÑŒ Ñ‡Ğ»ĞµĞ½Ñ‹')
+		return { '!Ñ Ğ»ÑĞ±Ğ»Ñ ÑĞ¾ÑĞ°Ñ‚ÑŒ Ñ‡Ğ»ĞµĞ½Ñ‹' }
 	end
 
-	if string.find(string.rlower(text), 'àóå') then
-		msgChat('Âû ïğèçíàëèñü â òîì, ÷òî âû ıêñòğåìèñò')
-		return { '![ ıêñòğåìèçì ]  æèçíü âîğàì' }
+	if string.find(string.rlower(text), 'Ğ°ÑƒĞµ') then
+		msgChat('Ğ’Ñ‹ Ğ¿Ñ€Ğ¸Ğ·Ğ½Ğ°Ğ»Ğ¸ÑÑŒ Ğ² Ñ‚Ğ¾Ğ¼, Ñ‡Ñ‚Ğ¾ Ğ²Ñ‹ ÑĞºÑÑ‚Ñ€ĞµĞ¼Ğ¸ÑÑ‚')
+		return { '![ ÑĞºÑÑ‚Ñ€ĞµĞ¼Ğ¸Ğ·Ğ¼ ]  Ğ¶Ğ¸Ğ·Ğ½ÑŒ Ğ²Ğ¾Ñ€Ğ°Ğ¼' }
 	end
 end
 
@@ -353,21 +365,11 @@ function string.rlower(s)
         local ch = s:byte(i)
         if ch >= 192 and ch <= 223 then
             output = output .. russian_characters[ch + 32]
-        elseif ch == 168 then -- ¨
+        elseif ch == 168 then -- Ğ
             output = output .. russian_characters[184]
         else
             output = output .. string.char(ch)
         end
     end
     return output
-end
-
-
-function updateScript()
-	downloadUrlToFile(scriptPath, scriptUrl, function(id, status)
-		if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-			msgChat('Ñêğèïò îáíîâë¸í!')
-			thisScript():reload()
-		end
-	end)
 end
