@@ -3,7 +3,7 @@ script_author('Gerald.myr')
 
 require 'lib.moonloader'
 
-local scriptVersion = 1
+local scriptVersion = 2
 local updState = false
 
 local scriptPath = thisScript().path
